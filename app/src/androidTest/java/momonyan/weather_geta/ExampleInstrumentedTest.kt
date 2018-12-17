@@ -1,4 +1,4 @@
-package com.example.bluewind.weather_geta
+package momonyan.weather_geta
 
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
