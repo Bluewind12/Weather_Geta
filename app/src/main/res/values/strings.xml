@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">Weather_Geta</string>
+    <string name="sunny_kan">晴れ</string>
+    <string name="sunny">はれ</string>
+    <string name="cloud_kan">曇り</string>
+    <string name="cloud">くもり</string>
+    <string name="lain_kan">雨</string>
+    <string name="lain">あめ</string>
+    <string name="thunder_kan">雷</string>
+    <string name="thunder">かみなり</string>
 </resources>
