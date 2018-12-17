@@ -59,6 +59,14 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
             showInfo(event)
         }
 
+        if(sensorY <=0.0f && !sensorFlag) {
+            sensorFlag = true
+            textView2.text = "起こして！"
+        }
+        if(sensorY >= 9.0f && sensorFlag){
+            sensorFlag = false
+            textView2.text = "晴れ"
+        }
     }
 
     private fun showInfo(event: SensorEvent) {
