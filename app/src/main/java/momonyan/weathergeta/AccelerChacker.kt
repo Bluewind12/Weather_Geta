@@ -1,4 +1,4 @@
-package momonyan.weather_geta
+package momonyan.weathergeta
 
 import android.hardware.SensorEvent
 import android.hardware.Sensor.TYPE_ACCELEROMETER
@@ -13,13 +13,9 @@ import android.support.v7.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
 
-class MainActivity : AppCompatActivity(), SensorEventListener {
+class AccelerChacker : AppCompatActivity(), SensorEventListener {
 
     private lateinit var sensorManager: SensorManager
-    private var sensorX: Float = 0.0f
-    private var sensorY: Float = 0.0f
-    private var sensorZ: Float = 0.0f
-    private var sensorFlag = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,6 +41,10 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     }
 
     override fun onSensorChanged(event: SensorEvent) {
+        val sensorX: Float
+        val sensorY: Float
+        val sensorZ: Float
+
         if (event.sensor.type == Sensor.TYPE_ACCELEROMETER) {
             sensorX = event.values[0]
             sensorY = event.values[1]
@@ -57,15 +57,6 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
             textView.text = strTmp
 
             showInfo(event)
-        }
-
-        if(sensorY <=0.0f && !sensorFlag) {
-            sensorFlag = true
-            textView2.text = "起こして！"
-        }
-        if(sensorY >= 9.0f && sensorFlag){
-            sensorFlag = false
-            textView2.text = "晴れ"
         }
     }
 

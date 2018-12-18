@@ -1,4 +1,4 @@
-package momonyan.weather_geta
+package momonyan.weathergeta
 
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4

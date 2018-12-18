@@ -1,4 +1,4 @@
-package momonyan.weather_geta
+package momonyan.weathergeta
 
 import android.content.Context
 import android.hardware.Sensor

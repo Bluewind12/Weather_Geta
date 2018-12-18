@@ -7,7 +7,7 @@ apply plugin: 'kotlin-android-extensions'
 android {
     compileSdkVersion 28
     defaultConfig {
-        applicationId "momonyan.weather_geta"
+        applicationId "momonyan.weathergeta"
         minSdkVersion 15
         targetSdkVersion 28
         versionCode 1
