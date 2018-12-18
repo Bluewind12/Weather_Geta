@@ -1,4 +1,4 @@
-package momonyan.weather_geta
+package momonyan.weathergeta
 
 import org.junit.Test
 

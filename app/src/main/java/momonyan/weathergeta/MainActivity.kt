@@ -1,4 +1,4 @@
-package momonyan.weather_geta
+package momonyan.weathergeta
 
 import android.content.DialogInterface
 import android.content.Intent
@@ -12,6 +12,7 @@ import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
 import java.net.URL
 import java.util.*
@@ -65,11 +66,11 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         }
 
 
-        if (sensorY <= 0.0f && !sensorFlag) {
+        if (sensorY <= -4.5f && !sensorFlag) {
             sensorFlag = true
             textView2.text = "起こして！"
         }
-        if (sensorY >= 9.0f && sensorFlag) {
+        if (sensorY >= 8.0f && sensorFlag) {
             sensorFlag = false
             if (flag) {
                 when (Random().nextInt(10)) {
@@ -128,17 +129,19 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         when (item.itemId) {
             R.id.menu1 -> {
                 //TODO 説明画面への移行
+                Toast.makeText(this, "説明", Toast.LENGTH_LONG).show()
                 return true
             }
             R.id.menu2 -> {
                 //TODO 設定画面への移行
-
+                Toast.makeText(this, "設定", Toast.LENGTH_LONG).show()
                 return true
             }
             R.id.menu3 -> {
                 //TODO プライバシーポリシーへの移行
                 AlertDialog.Builder(this)
                     .setTitle("Webページを開きます")
+                    .setMessage(getString(R.string.privacy_description))
                     .setPositiveButton("はい") { dialog, which ->
                         val privacyURL = Uri.parse(getString(R.string.privacy_url))
                         val intent = Intent(Intent.ACTION_VIEW, privacyURL)

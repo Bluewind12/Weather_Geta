@@ -1,4 +1,4 @@
-package momonyan.weather_geta
+package momonyan.weathergeta
 
 import android.hardware.SensorEvent
 import android.hardware.Sensor.TYPE_ACCELEROMETER
