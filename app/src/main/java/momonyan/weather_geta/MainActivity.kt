@@ -1,16 +1,13 @@
 package momonyan.weather_geta
 
 import android.hardware.SensorEvent
-import android.hardware.Sensor.TYPE_ACCELEROMETER
 import android.hardware.SensorManager
-import android.content.Context.SENSOR_SERVICE
 import android.hardware.Sensor
-import android.support.v4.content.ContextCompat.getSystemService
 import android.os.Bundle
-import android.widget.TextView
 import android.hardware.SensorEventListener
 import android.support.v7.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
+import java.util.*
 
 
 class MainActivity : AppCompatActivity(), SensorEventListener {
@@ -20,6 +17,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     private var sensorY: Float = 0.0f
     private var sensorZ: Float = 0.0f
     private var sensorFlag = false
+    private var flag = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,13 +57,50 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
             showInfo(event)
         }
 
-        if(sensorY <=0.0f && !sensorFlag) {
+
+        if (sensorY <= 0.0f && !sensorFlag) {
             sensorFlag = true
             textView2.text = "起こして！"
         }
-        if(sensorY >= 9.0f && sensorFlag){
+        if (sensorY >= 9.0f && sensorFlag) {
             sensorFlag = false
-            textView2.text = "晴れ"
+            if (flag) {
+                when (Random().nextInt(10)) {
+                    0 -> textView2.text = getString(R.string.sunny_kan)
+                    1 -> textView2.text = getString(R.string.sunny_kan)
+                    2 -> textView2.text = getString(R.string.sunny_kan)
+                    3 -> textView2.text = getString(R.string.sunny_kan)
+                    4 -> textView2.text = getString(R.string.sunny_kan)
+                    5 -> textView2.text = getString(R.string.cloud_kan)
+                    6 -> textView2.text = getString(R.string.cloud_kan)
+                    7 -> {
+                        textView2.text = getString(R.string.lain_kan)
+                        flag = false
+                    }
+                    8 -> {
+                        textView2.text = getString(R.string.lain_kan)
+                        flag = false
+                    }
+                    9 -> {
+                        textView2.text = getString(R.string.lain_kan)
+                        flag = false
+                    }
+                }
+            } else {
+                when (Random().nextInt(10)) {
+                    0 -> textView2.text = getString(R.string.sunny_kan)
+                    1 -> textView2.text = getString(R.string.sunny_kan)
+                    2 -> textView2.text = getString(R.string.sunny_kan)
+                    3 -> textView2.text = getString(R.string.cloud_kan)
+                    4 -> textView2.text = getString(R.string.cloud_kan)
+                    5 -> textView2.text = getString(R.string.cloud_kan)
+                    6 -> textView2.text = getString(R.string.cloud_kan)
+                    7 -> textView2.text = getString(R.string.thunder_kan)
+                    8 -> textView2.text = getString(R.string.thunder_kan)
+                    9 -> textView2.text = getString(R.string.thunder_kan)
+                }
+                flag = true
+            }
         }
     }
 
