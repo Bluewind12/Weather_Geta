@@ -4,17 +4,17 @@
     <item
             android:id="@+id/menu1"
             android:title="@string/description"
-            android:icon="@android:drawable/presence_audio_away"
+            android:icon="@drawable/icon_leaf_256"
             app:showAsAction="ifRoom"/>
     <item
             android:id="@+id/menu2"
             android:title="@string/setting"
-            android:icon="@android:drawable/ic_menu_set_as"
+            android:icon="@drawable/icon_gear_256"
             app:showAsAction="ifRoom"/>
     <item
             android:id="@+id/menu3"
             android:title="@string/privacy"
-            android:icon="@android:drawable/alert_dark_frame"
+            android:icon="@drawable/icon_document_256"
             app:showAsAction="ifRoom"/>
 
 </menu>
