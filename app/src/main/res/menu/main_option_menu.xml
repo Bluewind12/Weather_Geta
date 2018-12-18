@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+            android:id="@+id/menu1"
+            android:title="@string/description"
+            android:icon="@android:drawable/presence_audio_away"
+            app:showAsAction="ifRoom"/>
+    <item
+            android:id="@+id/menu2"
+            android:title="@string/setting"
+            android:icon="@android:drawable/ic_menu_set_as"
+            app:showAsAction="ifRoom"/>
+    <item
+            android:id="@+id/menu3"
+            android:title="@string/privacy"
+            android:icon="@android:drawable/alert_dark_frame"
+            app:showAsAction="ifRoom"/>
+
+</menu>

@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">Weather_Geta</string>
+    <!-- 天気 -->
     <string name="sunny_kan">晴れ</string>
     <string name="sunny">はれ</string>
     <string name="cloud_kan">曇り</string>
@@ -8,4 +9,19 @@
     <string name="lain">あめ</string>
     <string name="thunder_kan">雷</string>
     <string name="thunder">かみなり</string>
+    
+    <!-- オプションメニュー -->
+    <string name="description">説明</string>
+    <string name="setting">設定</string>
+    <string name="privacy">プライバシーポリシーなど</string>
+    <string name="privacy_description">[プライバシーポリシー]¥n[使用素材]についてのページを開きます。¥nよろしいですか？</string>
+
+    <!-- URL -->
+    <string name="privacy_url">http://</string>
+    
+    <!-- 広告系 -->
+    <string name="adsID_banner">1000</string>
+    <string name="adsID_popup">1000</string>
+    <string name="adsKey">1000</string>
+
 </resources>

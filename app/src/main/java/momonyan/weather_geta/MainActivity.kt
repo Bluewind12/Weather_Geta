@@ -1,12 +1,19 @@
 package momonyan.weather_geta
 
+import android.content.DialogInterface
+import android.content.Intent
 import android.hardware.SensorEvent
 import android.hardware.SensorManager
 import android.hardware.Sensor
 import android.os.Bundle
 import android.hardware.SensorEventListener
+import android.net.Uri
+import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
+import android.view.Menu
+import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_main.*
+import java.net.URL
 import java.util.*
 
 
@@ -110,5 +117,38 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
 
     override fun onAccuracyChanged(sensor: Sensor, accuracy: Int) {
 
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.main_option_menu, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.menu1 -> {
+                //TODO 説明画面への移行
+                return true
+            }
+            R.id.menu2 -> {
+                //TODO 設定画面への移行
+
+                return true
+            }
+            R.id.menu3 -> {
+                //TODO プライバシーポリシーへの移行
+                AlertDialog.Builder(this)
+                    .setTitle("Webページを開きます")
+                    .setPositiveButton("はい") { dialog, which ->
+                        val privacyURL = Uri.parse(getString(R.string.privacy_url))
+                        val intent = Intent(Intent.ACTION_VIEW, privacyURL)
+                        startActivity(intent)
+                    }
+                    .setNegativeButton("キャンセル", null)
+                    .show()
+                return true
+            }
+        }
+        return true
     }
 }
