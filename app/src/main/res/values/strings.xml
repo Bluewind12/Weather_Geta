@@ -18,7 +18,8 @@
 
     <!-- URL -->
     <string name="privacy_url">http://</string>
-    
+
+    <!-- 天気系 -->
     <!-- 広告系 -->
     <string name="adsID_banner">1000</string>
     <string name="adsID_popup">1000</string>

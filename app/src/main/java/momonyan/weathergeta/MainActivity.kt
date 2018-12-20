@@ -8,6 +8,7 @@ import android.hardware.Sensor
 import android.os.Bundle
 import android.hardware.SensorEventListener
 import android.net.Uri
+import android.os.Handler
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
@@ -16,6 +17,11 @@ import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
 import java.net.URL
 import java.util.*
+import android.util.Log
+import android.widget.TextView
+import okhttp3.*
+import java.io.IOException
+import java.lang.Thread.currentThread
 
 
 class MainActivity : AppCompatActivity(), SensorEventListener {
@@ -32,6 +38,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         setContentView(R.layout.activity_main)
 
         sensorManager = getSystemService(SENSOR_SERVICE) as SensorManager
+        getWeather()
     }
 
     override fun onResume() {
@@ -153,5 +160,20 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
             }
         }
         return true
+    }
+
+    private fun getWeather() {
+        val lat = 35.689487 //緯度
+        val lon = 139.691706 //軽度
+        val client = OkHttpClient()
+        val request = Request.Builder()
+            .url("https://api.openweathermap.org/data/2.5/find?lat="+lat+"&lon="+lon+"&cnt=1&appid=3df51d5c17d48c9751598d7474ce0bbe")
+            .build()
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {}
+            override fun onResponse(call: Call, response: Response) {
+                Log.d("TestTag", response.body()?.string())
+            }
+        })
     }
 }
