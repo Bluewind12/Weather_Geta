@@ -41,6 +41,8 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     private var position = ""
     private var weather = ""
 
+    private val landStructure = LandSeting()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -175,11 +177,12 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
 
     private fun getWeather() {
         nums++
-        val lat = 35.689487 //緯度
-        val lon = 139.691706 //軽度
+        val randomInts = Random().nextInt(48)
+        //ランダムに取得
+        landStructure.getLatLon(randomInts)
         val client = OkHttpClient()
         val request = Request.Builder()
-            .url("https://api.openweathermap.org/data/2.5/find?lat=" + lat + "&lon=" + lon + "&cnt=1&appid=3df51d5c17d48c9751598d7474ce0bbe")
+            .url("https://api.openweathermap.org/data/2.5/find?lat=" + landStructure.lat + "&lon=" + landStructure.lon + "&cnt=1&appid=3df51d5c17d48c9751598d7474ce0bbe")
             .build()
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {}
@@ -222,6 +225,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
                     val weather = weatherObj.getString("main")
 
                     Log.d("AAA:地点", "回数：" + nums + ":" + cityName)
+                    Log.d("AAA:設定地点","回数："+nums +"："+landStructure.city)
                     Log.d("AAA:天気:", "回数：" + nums + ":" + weather)
 
                 } catch (e: JSONException) {
