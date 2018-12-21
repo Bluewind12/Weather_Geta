@@ -20,8 +20,12 @@ import java.util.*
 import android.util.Log
 import android.widget.TextView
 import okhttp3.*
+import org.json.JSONObject
 import java.io.IOException
 import java.lang.Thread.currentThread
+import org.json.JSONException
+import org.json.JSONArray
+import android.R.attr.data
 
 
 class MainActivity : AppCompatActivity(), SensorEventListener {
@@ -33,12 +37,19 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     private var sensorFlag = false
     private var flag = false
 
+    private var nums = 0
+    private var position = ""
+    private var weather = ""
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         sensorManager = getSystemService(SENSOR_SERVICE) as SensorManager
-        getWeather()
+
+        button.setOnClickListener {
+            getWeather()
+        }
     }
 
     override fun onResume() {
@@ -163,17 +174,61 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     }
 
     private fun getWeather() {
+        nums++
         val lat = 35.689487 //緯度
         val lon = 139.691706 //軽度
         val client = OkHttpClient()
         val request = Request.Builder()
-            .url("https://api.openweathermap.org/data/2.5/find?lat="+lat+"&lon="+lon+"&cnt=1&appid=3df51d5c17d48c9751598d7474ce0bbe")
+            .url("https://api.openweathermap.org/data/2.5/find?lat=" + lat + "&lon=" + lon + "&cnt=1&appid=3df51d5c17d48c9751598d7474ce0bbe")
             .build()
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {}
             override fun onResponse(call: Call, response: Response) {
-                Log.d("TestTag", response.body()?.string())
+                val data = response.body()?.string()
+                Log.d("AAA:LOGDATA : ", data)
+
+                try {
+                    val rootObj = JSONObject(data)
+                    val listArray = rootObj.getJSONArray("list")
+
+                    val obj = listArray.getJSONObject(0)
+
+                    // 地点ID
+                    val id = obj.getInt("id")
+
+                    // 地点名
+                    val cityName = obj.getString("name")
+
+                    // 気温(Kから℃に変換)
+                    val mainObj = obj.getJSONObject("main")
+                    val currentTemp = (mainObj.getDouble("temp") - 273.15f).toFloat()
+
+                    val minTemp = (mainObj.getDouble("temp_min") - 273.15f).toFloat()
+
+                    val maxTemp = (mainObj.getDouble("temp_max") - 273.15f).toFloat()
+
+                    // 湿度
+                    if (mainObj.has("humidity")) {
+                        val humidity = mainObj.getInt("humidity")
+                    }
+
+                    // 取得時間
+                    val time = obj.getLong("dt")
+
+                    // 天気
+                    val weatherArray = obj.getJSONArray("weather")
+                    val weatherObj = weatherArray.getJSONObject(0)
+                    val iconId = weatherObj.getString("icon")
+                    val weather = weatherObj.getString("main")
+
+                    Log.d("AAA:地点", "回数：" + nums + ":" + cityName)
+                    Log.d("AAA:天気:", "回数：" + nums + ":" + weather)
+
+                } catch (e: JSONException) {
+                    e.printStackTrace()
+                }
             }
         })
+
     }
 }
