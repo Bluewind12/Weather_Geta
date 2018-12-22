@@ -11,7 +11,7 @@ import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Toast
+import android.widget.*
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 import okhttp3.*
@@ -27,6 +27,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     private var sensorZ: Float = 0.0f
     private var sensorFlag = false
     private var flag = false
+    private var useLanguageFlag = 0 //0:漢字 1:ひらがな
 
     private var nums = 0
     private var position = ""
@@ -85,6 +86,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         }
         if (sensorY >= 8.0f && sensorFlag) {
             textView2.text = getString(R.string.output_weather, landStructure.city, outWeather)
+            sensorFlag = false
         }
     }
 
@@ -110,6 +112,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
             }
             R.id.menu2 -> {
                 //TODO 設定画面への移行
+                settingDialogCreate()
                 Toast.makeText(this, "設定", Toast.LENGTH_LONG).show()
                 return true
             }
@@ -196,5 +199,45 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
                 }
             }
         })
+    }
+
+    private fun settingDialogCreate() {
+        val layout = LinearLayout(this)
+        layout.orientation = LinearLayout.VERTICAL
+
+        val textView = TextView(this)
+        textView.text = "表示は？"
+        val radioGroup = RadioGroup(this)
+        radioGroup.orientation = RadioGroup.HORIZONTAL
+        val radioButton1 = RadioButton(this)
+        radioButton1.text = "漢字"
+        val radioButton2 = RadioButton(this)
+        radioButton2.text = "ひらがな"
+        radioGroup.addView(radioButton1)
+        radioGroup.addView(radioButton2)
+        when (useLanguageFlag) {
+            0 -> radioButton1.isChecked = true
+            1 -> radioButton2.isChecked = true
+        }
+        layout.addView(radioGroup)
+        //
+        val dlg = AlertDialog.Builder(this)
+        dlg.setTitle("設定画面")
+        dlg.setView(layout)
+        dlg.setPositiveButton("決定") { dialog, which ->
+            //Yesボタンが押された時の処理
+            when {
+                radioButton1.isChecked -> useLanguageFlag = 0
+                radioButton2.isChecked -> useLanguageFlag = 1
+            }
+            Toast.makeText(this@MainActivity, "Yesが押されました", Toast.LENGTH_LONG).show()
+
+        }
+        dlg.setNegativeButton("キャンセル") { dialog, which ->
+            //Noボタンが押された時の処理
+            Toast.makeText(this@MainActivity, "Noが押されました", Toast.LENGTH_LONG).show()
+        }
+        // AlertDialogを表示する
+        dlg.show()
     }
 }
