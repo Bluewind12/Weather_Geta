@@ -1,6 +1,5 @@
 package momonyan.weathergeta
 
-import android.content.DialogInterface
 import android.content.Intent
 import android.hardware.SensorEvent
 import android.hardware.SensorManager
@@ -8,25 +7,18 @@ import android.hardware.Sensor
 import android.os.Bundle
 import android.hardware.SensorEventListener
 import android.net.Uri
-import android.os.Handler
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
-import java.net.URL
 import java.util.*
 import android.util.Log
-import android.widget.TextView
 import okhttp3.*
 import org.json.JSONObject
 import java.io.IOException
-import java.lang.Thread.currentThread
 import org.json.JSONException
-import org.json.JSONArray
-import android.R.attr.data
-
 
 class MainActivity : AppCompatActivity(), SensorEventListener {
 
@@ -42,6 +34,8 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     private var weather = ""
 
     private val landStructure = LandSeting()
+    private lateinit var outWeather: String
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -87,48 +81,11 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
 
 
         if (sensorY <= -4.5f && !sensorFlag) {
-            sensorFlag = true
             textView2.text = "起こして！"
+            getWeather()
         }
         if (sensorY >= 8.0f && sensorFlag) {
-            sensorFlag = false
-            if (flag) {
-                when (Random().nextInt(10)) {
-                    0 -> textView2.text = getString(R.string.sunny_kan)
-                    1 -> textView2.text = getString(R.string.sunny_kan)
-                    2 -> textView2.text = getString(R.string.sunny_kan)
-                    3 -> textView2.text = getString(R.string.sunny_kan)
-                    4 -> textView2.text = getString(R.string.sunny_kan)
-                    5 -> textView2.text = getString(R.string.cloud_kan)
-                    6 -> textView2.text = getString(R.string.cloud_kan)
-                    7 -> {
-                        textView2.text = getString(R.string.lain_kan)
-                        flag = false
-                    }
-                    8 -> {
-                        textView2.text = getString(R.string.lain_kan)
-                        flag = false
-                    }
-                    9 -> {
-                        textView2.text = getString(R.string.lain_kan)
-                        flag = false
-                    }
-                }
-            } else {
-                when (Random().nextInt(10)) {
-                    0 -> textView2.text = getString(R.string.sunny_kan)
-                    1 -> textView2.text = getString(R.string.sunny_kan)
-                    2 -> textView2.text = getString(R.string.sunny_kan)
-                    3 -> textView2.text = getString(R.string.cloud_kan)
-                    4 -> textView2.text = getString(R.string.cloud_kan)
-                    5 -> textView2.text = getString(R.string.cloud_kan)
-                    6 -> textView2.text = getString(R.string.cloud_kan)
-                    7 -> textView2.text = getString(R.string.thunder_kan)
-                    8 -> textView2.text = getString(R.string.thunder_kan)
-                    9 -> textView2.text = getString(R.string.thunder_kan)
-                }
-                flag = true
-            }
+            textView2.text = getString(R.string.output_weather, landStructure.city, outWeather)
         }
     }
 
@@ -225,14 +182,25 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
                     val weather = weatherObj.getString("main")
 
                     Log.d("AAA:地点", "回数：" + nums + ":" + cityName)
-                    Log.d("AAA:設定地点","回数："+nums +"："+landStructure.city)
-                    Log.d("AAA:天気:", "回数：" + nums + ":" + weather)
+                    Log.d("AAA:設定地点", "回数：" + nums + "：" + landStructure.city)
+                    Log.d("AAA:天気", "回数：" + nums + ":" + weather)
 
+                    when (weather) {
+                        WeatherEnum.Clear.eng -> outWeather = WeatherEnum.Clear.kanzi
+                        WeatherEnum.Clouds.eng -> outWeather = WeatherEnum.Clouds.kanzi
+                        WeatherEnum.Rain.eng -> outWeather = WeatherEnum.Rain.kanzi
+                        WeatherEnum.ThunderStorm.eng -> outWeather = WeatherEnum.ThunderStorm.kanzi
+                        WeatherEnum.Snow.eng -> outWeather = WeatherEnum.Snow.kanzi
+                        WeatherEnum.Mist.eng -> outWeather = WeatherEnum.Mist.kanzi
+                        else -> outWeather = "???"
+                    }
+                    if(outWeather == "???")Log.d("AAABBB","天気"+weather)
+
+                    sensorFlag = true
                 } catch (e: JSONException) {
                     e.printStackTrace()
                 }
             }
         })
-
     }
 }
