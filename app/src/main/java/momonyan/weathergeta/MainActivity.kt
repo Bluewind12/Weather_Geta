@@ -138,7 +138,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         nums++
         val randomInts = Random().nextInt(48)
         //ランダムに取得
-        landStructure.getLatLon(randomInts)
+        landStructure.getLatLon(randomInts, useLanguageFlag)
         val client = OkHttpClient()
         val request = Request.Builder()
             .url("https://api.openweathermap.org/data/2.5/find?lat=" + landStructure.lat + "&lon=" + landStructure.lon + "&cnt=1&appid=3df51d5c17d48c9751598d7474ce0bbe")
@@ -182,17 +182,29 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
                     val iconId = weatherObj.getString("icon")
                     val weather = weatherObj.getString("main")
 
-
-                    when (weather) {
-                        WeatherEnum.Clear.eng -> outWeather = WeatherEnum.Clear.kanzi
-                        WeatherEnum.Clouds.eng -> outWeather = WeatherEnum.Clouds.kanzi
-                        WeatherEnum.Rain.eng -> outWeather = WeatherEnum.Rain.kanzi
-                        WeatherEnum.ThunderStorm.eng -> outWeather = WeatherEnum.ThunderStorm.kanzi
-                        WeatherEnum.Snow.eng -> outWeather = WeatherEnum.Snow.kanzi
-                        WeatherEnum.Mist.eng -> outWeather = WeatherEnum.Mist.kanzi
-                        else -> outWeather = "???"
+                    if (useLanguageFlag == 0) {
+                        when (weather) {
+                            WeatherEnum.Clear.eng -> outWeather = WeatherEnum.Clear.kanzi
+                            WeatherEnum.Clouds.eng -> outWeather = WeatherEnum.Clouds.kanzi
+                            WeatherEnum.Rain.eng -> outWeather = WeatherEnum.Rain.kanzi
+                            WeatherEnum.ThunderStorm.eng -> outWeather = WeatherEnum.ThunderStorm.kanzi
+                            WeatherEnum.Snow.eng -> outWeather = WeatherEnum.Snow.kanzi
+                            WeatherEnum.Mist.eng -> outWeather = WeatherEnum.Mist.kanzi
+                            else -> outWeather = "???"
+                        }
+                    } else if (useLanguageFlag == 1) {
+                        when (weather) {
+                            WeatherEnum.Clear.eng -> outWeather = WeatherEnum.Clear.hiragana
+                            WeatherEnum.Clouds.eng -> outWeather = WeatherEnum.Clouds.hiragana
+                            WeatherEnum.Rain.eng -> outWeather = WeatherEnum.Rain.hiragana
+                            WeatherEnum.ThunderStorm.eng -> outWeather = WeatherEnum.ThunderStorm.hiragana
+                            WeatherEnum.Snow.eng -> outWeather = WeatherEnum.Snow.hiragana
+                            WeatherEnum.Mist.eng -> outWeather = WeatherEnum.Mist.hiragana
+                            else -> outWeather = "???"
+                        }
+                    } else {
+                        error("変換エラー")
                     }
-
                     sensorFlag = true
                 } catch (e: JSONException) {
                     e.printStackTrace()
@@ -209,11 +221,13 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         textView.text = "表示は？"
         val radioGroup = RadioGroup(this)
         radioGroup.orientation = RadioGroup.HORIZONTAL
+        //0:漢字
         val radioButton1 = RadioButton(this)
         radioButton1.text = "漢字"
+        radioGroup.addView(radioButton1)
+        //1:ひらがな
         val radioButton2 = RadioButton(this)
         radioButton2.text = "ひらがな"
-        radioGroup.addView(radioButton1)
         radioGroup.addView(radioButton2)
         when (useLanguageFlag) {
             0 -> radioButton1.isChecked = true
