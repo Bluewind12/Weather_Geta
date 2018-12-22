@@ -14,7 +14,10 @@ import android.view.MenuItem
 import android.widget.*
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
-
+import okhttp3.*
+import org.json.JSONObject
+import java.io.IOException
+import org.json.JSONException
 
 class MainActivity : AppCompatActivity(), SensorEventListener {
 
@@ -25,14 +28,24 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     private var sensorFlag = false
     private var flag = false
     private var useLanguageFlag = 0 //0:漢字 1:ひらがな
-    private val kanzi = arrayListOf<String>("晴れ", "曇り", "雨", "雷")
-    private val hiragana = arrayListOf<String>("はれ", "くもり", "あめ", "かみなり")
+
+    private var nums = 0
+    private var position = ""
+    private var weather = ""
+
+    private val landStructure = LandSeting()
+    private lateinit var outWeather: String
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         sensorManager = getSystemService(SENSOR_SERVICE) as SensorManager
+
+        button.setOnClickListener {
+            getWeather()
+        }
     }
 
     override fun onResume() {
@@ -68,28 +81,12 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
 
 
         if (sensorY <= -4.5f && !sensorFlag) {
-            sensorFlag = true
             textView2.text = "起こして！"
+            getWeather()
         }
         if (sensorY >= 8.0f && sensorFlag) {
+            textView2.text = getString(R.string.output_weather, landStructure.city, outWeather)
             sensorFlag = false
-            if (flag) {
-                when (Random().nextInt(10)) {
-                    0, 1, 2, 3, 4 -> textView2.text = viewLangageSet(0)
-                    5, 6 -> textView2.text = viewLangageSet(1)
-                    7, 8, 9 -> {
-                        textView2.text = viewLangageSet(2)
-                        flag = false
-                    }
-                }
-            } else {
-                when (Random().nextInt(10)) {
-                    0, 1, 2 -> textView2.text = viewLangageSet(0)
-                    3, 4, 5, 6 -> textView2.text = viewLangageSet(1)
-                    7, 8, 9 -> textView2.text = viewLangageSet(3)
-                }
-                flag = true
-            }
         }
     }
 
@@ -137,12 +134,71 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         return true
     }
 
-    private fun viewLangageSet(weatherNum: Int): String {
-        when (useLanguageFlag) {
-            0 -> return kanzi[weatherNum]
-            1 -> return hiragana[weatherNum]
-            else -> error("エラーコード1")
-        }
+    private fun getWeather() {
+        nums++
+        val randomInts = Random().nextInt(48)
+        //ランダムに取得
+        landStructure.getLatLon(randomInts)
+        val client = OkHttpClient()
+        val request = Request.Builder()
+            .url("https://api.openweathermap.org/data/2.5/find?lat=" + landStructure.lat + "&lon=" + landStructure.lon + "&cnt=1&appid=3df51d5c17d48c9751598d7474ce0bbe")
+            .build()
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {}
+            override fun onResponse(call: Call, response: Response) {
+                val data = response.body()?.string()
+
+                try {
+                    val rootObj = JSONObject(data)
+                    val listArray = rootObj.getJSONArray("list")
+
+                    val obj = listArray.getJSONObject(0)
+
+                    // 地点ID
+                    val id = obj.getInt("id")
+
+                    // 地点名
+                    val cityName = obj.getString("name")
+
+                    // 気温(Kから℃に変換)
+                    val mainObj = obj.getJSONObject("main")
+                    val currentTemp = (mainObj.getDouble("temp") - 273.15f).toFloat()
+
+                    val minTemp = (mainObj.getDouble("temp_min") - 273.15f).toFloat()
+
+                    val maxTemp = (mainObj.getDouble("temp_max") - 273.15f).toFloat()
+
+                    // 湿度
+                    if (mainObj.has("humidity")) {
+                        val humidity = mainObj.getInt("humidity")
+                    }
+
+                    // 取得時間
+                    val time = obj.getLong("dt")
+
+                    // 天気
+                    val weatherArray = obj.getJSONArray("weather")
+                    val weatherObj = weatherArray.getJSONObject(0)
+                    val iconId = weatherObj.getString("icon")
+                    val weather = weatherObj.getString("main")
+
+
+                    when (weather) {
+                        WeatherEnum.Clear.eng -> outWeather = WeatherEnum.Clear.kanzi
+                        WeatherEnum.Clouds.eng -> outWeather = WeatherEnum.Clouds.kanzi
+                        WeatherEnum.Rain.eng -> outWeather = WeatherEnum.Rain.kanzi
+                        WeatherEnum.ThunderStorm.eng -> outWeather = WeatherEnum.ThunderStorm.kanzi
+                        WeatherEnum.Snow.eng -> outWeather = WeatherEnum.Snow.kanzi
+                        WeatherEnum.Mist.eng -> outWeather = WeatherEnum.Mist.kanzi
+                        else -> outWeather = "???"
+                    }
+
+                    sensorFlag = true
+                } catch (e: JSONException) {
+                    e.printStackTrace()
+                }
+            }
+        })
     }
 
     private fun settingDialogCreate() {
