@@ -14,7 +14,6 @@ import android.view.MenuItem
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
-import android.util.Log
 import okhttp3.*
 import org.json.JSONObject
 import java.io.IOException
@@ -145,7 +144,6 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
             override fun onFailure(call: Call, e: IOException) {}
             override fun onResponse(call: Call, response: Response) {
                 val data = response.body()?.string()
-                Log.d("AAA:LOGDATA : ", data)
 
                 try {
                     val rootObj = JSONObject(data)
@@ -181,9 +179,6 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
                     val iconId = weatherObj.getString("icon")
                     val weather = weatherObj.getString("main")
 
-                    Log.d("AAA:地点", "回数：" + nums + ":" + cityName)
-                    Log.d("AAA:設定地点", "回数：" + nums + "：" + landStructure.city)
-                    Log.d("AAA:天気", "回数：" + nums + ":" + weather)
 
                     when (weather) {
                         WeatherEnum.Clear.eng -> outWeather = WeatherEnum.Clear.kanzi
@@ -194,7 +189,6 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
                         WeatherEnum.Mist.eng -> outWeather = WeatherEnum.Mist.kanzi
                         else -> outWeather = "???"
                     }
-                    if(outWeather == "???")Log.d("AAABBB","天気"+weather)
 
                     sensorFlag = true
                 } catch (e: JSONException) {
