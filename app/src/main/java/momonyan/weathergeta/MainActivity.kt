@@ -26,12 +26,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     private var sensorY: Float = 0.0f
     private var sensorZ: Float = 0.0f
     private var sensorFlag = false
-    private var flag = false
     private var useLanguageFlag = 0 //0:漢字 1:ひらがな
-
-    private var nums = 0
-    private var position = ""
-    private var weather = ""
 
     private val landStructure = LandSeting()
     private lateinit var outWeather: String
@@ -135,7 +130,6 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     }
 
     private fun getWeather() {
-        nums++
         val randomInts = Random().nextInt(48)
         //ランダムに取得
         landStructure.getLatLon(randomInts, useLanguageFlag)
@@ -213,10 +207,14 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         })
     }
 
+
+
     private fun settingDialogCreate() {
+        //大元
         val layout = LinearLayout(this)
         layout.orientation = LinearLayout.VERTICAL
 
+        //表示言語 >>>
         val textView = TextView(this)
         textView.text = "表示は？"
         val radioGroup = RadioGroup(this)
@@ -233,8 +231,11 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
             0 -> radioButton1.isChecked = true
             1 -> radioButton2.isChecked = true
         }
+        layout.addView(textView)
         layout.addView(radioGroup)
-        //
+        // <<<
+
+        //ダイアログボックス
         val dlg = AlertDialog.Builder(this)
         dlg.setTitle("設定画面")
         dlg.setView(layout)
