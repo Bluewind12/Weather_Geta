@@ -1,5 +1,6 @@
 package momonyan.weathergeta
 
+import android.Manifest
 import android.content.Intent
 import android.hardware.SensorEvent
 import android.hardware.SensorManager
@@ -31,6 +32,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     private val landStructure = LandSeting()
     private lateinit var outWeather: String
 
+    private val REQUEST_CODE = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,8 +40,10 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
 
         sensorManager = getSystemService(SENSOR_SERVICE) as SensorManager
 
+        //パーミッションの許可
+        //RuntimePermissionChecker.requestAllPermissions(this, REQUEST_CODE)
+
         button.setOnClickListener {
-            getWeather()
         }
     }
 
@@ -138,7 +142,15 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
             .url("https://api.openweathermap.org/data/2.5/find?lat=" + landStructure.lat + "&lon=" + landStructure.lon + "&cnt=1&appid=3df51d5c17d48c9751598d7474ce0bbe")
             .build()
         client.newCall(request).enqueue(object : Callback {
-            override fun onFailure(call: Call, e: IOException) {}
+            override fun onFailure(call: Call, e: IOException) {
+                landStructure.city = "どこか"
+                when (useLanguageFlag) {
+                    0 -> outWeather = RandomWeather().getWeatherKanzi()
+                    1 -> outWeather = RandomWeather().getWeatherHiragana()
+                }
+                sensorFlag = true
+            }
+
             override fun onResponse(call: Call, response: Response) {
                 val data = response.body()?.string()
 
@@ -206,7 +218,6 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
             }
         })
     }
-
 
 
     private fun settingDialogCreate() {
