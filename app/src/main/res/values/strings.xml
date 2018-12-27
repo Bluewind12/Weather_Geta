@@ -20,7 +20,7 @@
     <string name="privacy_url">http://</string>
 
     <!-- 天気系 -->
-    <string name="output_weather">場所：%s　天気：%s</string>
+    <string name="output_weather">場所：%s\n天気：%s</string>
     <!-- 広告系 -->
     <string name="adsID_banner">1000</string>
     <string name="adsID_popup">1000</string>
