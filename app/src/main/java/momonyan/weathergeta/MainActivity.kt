@@ -1,6 +1,8 @@
 package momonyan.weathergeta
 
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.hardware.SensorEvent
 import android.hardware.SensorManager
 import android.hardware.Sensor
@@ -26,17 +28,27 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     private var sensorY: Float = 0.0f
     private var sensorZ: Float = 0.0f
     private var sensorFlag = false
-    private var useLanguageFlag = 0 //0:漢字 1:ひらがな
 
     private val landStructure = LandSeting()
     private lateinit var outWeather: String
 
+    //設定
+    private var languageFlag = 0 //0:漢字 1:ひらがな
+    private var networkFlag = false
+
+    //データ保持
+    private lateinit var sharedPreferences: SharedPreferences
+    private lateinit var editor: SharedPreferences.Editor
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         sensorManager = getSystemService(SENSOR_SERVICE) as SensorManager
+
+        sharedPreferences = getSharedPreferences("Main", Context.MODE_PRIVATE)
+        languageFlag = sharedPreferences.getInt("language", 0)
+        networkFlag = sharedPreferences.getBoolean("network", false)
 
         button.setOnClickListener {
             getWeather()
@@ -132,7 +144,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     private fun getWeather() {
         val randomInts = Random().nextInt(48)
         //ランダムに取得
-        landStructure.getLatLon(randomInts, useLanguageFlag)
+        landStructure.getLatLon(randomInts, languageFlag)
         val client = OkHttpClient()
         val request = Request.Builder()
             .url("https://api.openweathermap.org/data/2.5/find?lat=" + landStructure.lat + "&lon=" + landStructure.lon + "&cnt=1&appid=3df51d5c17d48c9751598d7474ce0bbe")
@@ -176,7 +188,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
                     val iconId = weatherObj.getString("icon")
                     val weather = weatherObj.getString("main")
 
-                    if (useLanguageFlag == 0) {
+                    if (languageFlag == 0) {
                         when (weather) {
                             WeatherEnum.Clear.eng -> outWeather = WeatherEnum.Clear.kanzi
                             WeatherEnum.Clouds.eng -> outWeather = WeatherEnum.Clouds.kanzi
@@ -186,7 +198,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
                             WeatherEnum.Mist.eng -> outWeather = WeatherEnum.Mist.kanzi
                             else -> outWeather = "???"
                         }
-                    } else if (useLanguageFlag == 1) {
+                    } else if (languageFlag == 1) {
                         when (weather) {
                             WeatherEnum.Clear.eng -> outWeather = WeatherEnum.Clear.hiragana
                             WeatherEnum.Clouds.eng -> outWeather = WeatherEnum.Clouds.hiragana
@@ -208,13 +220,12 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     }
 
 
-
     private fun settingDialogCreate() {
         //大元
         val layout = LinearLayout(this)
         layout.orientation = LinearLayout.VERTICAL
 
-        //表示言語 >>>
+        //表示言語
         val textView = TextView(this)
         textView.text = "表示は？"
         val radioGroup = RadioGroup(this)
@@ -227,13 +238,22 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         val radioButton2 = RadioButton(this)
         radioButton2.text = "ひらがな"
         radioGroup.addView(radioButton2)
-        when (useLanguageFlag) {
+        when (languageFlag) {
             0 -> radioButton1.isChecked = true
             1 -> radioButton2.isChecked = true
         }
         layout.addView(textView)
         layout.addView(radioGroup)
-        // <<<
+
+        //ネット使用
+        val textView2 = TextView(this)
+        textView2.text = "ネットワークの使用"
+        val toggleButton = ToggleButton(this)
+        toggleButton.textOff = "使用しない"
+        toggleButton.textOn = "使用する"
+        toggleButton.isChecked = networkFlag
+        layout.addView(textView2)
+        layout.addView(toggleButton)
 
         //ダイアログボックス
         val dlg = AlertDialog.Builder(this)
@@ -241,10 +261,18 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         dlg.setView(layout)
         dlg.setPositiveButton("決定") { dialog, which ->
             //Yesボタンが押された時の処理
+            editor = sharedPreferences.edit()
             when {
-                radioButton1.isChecked -> useLanguageFlag = 0
-                radioButton2.isChecked -> useLanguageFlag = 1
+                radioButton1.isChecked -> {
+                    languageFlag = 0
+                }
+                radioButton2.isChecked -> {
+                    languageFlag = 1
+                }
             }
+            editor.putInt("language",languageFlag)
+            editor.putBoolean("network",toggleButton.isChecked)
+
             Toast.makeText(this@MainActivity, "Yesが押されました", Toast.LENGTH_LONG).show()
 
         }
