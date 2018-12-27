@@ -93,7 +93,11 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
 
         if (sensorY <= -4.5f && !sensorFlag) {
             textView2.text = "起こして！"
-            getWeather()
+            if (networkFlag) {
+                getWeather()
+            } else {
+                notNetWeather()
+            }
         }
         if (sensorY >= 8.0f && sensorFlag) {
             textView2.text = getString(R.string.output_weather, landStructure.city, outWeather)
@@ -155,12 +159,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
             .build()
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                landStructure.city = "どこか"
-                when (languageFlag) {
-                    0 -> outWeather = RandomWeather().getWeatherKanzi()
-                    1 -> outWeather = RandomWeather().getWeatherHiragana()
-                }
-                sensorFlag = true
+                notNetWeather()
             }
 
             override fun onResponse(call: Call, response: Response) {
@@ -231,6 +230,14 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         })
     }
 
+    private fun notNetWeather() {
+        landStructure.city = "どこか"
+        when (languageFlag) {
+            0 -> outWeather = RandomWeather().getWeatherKanzi()
+            1 -> outWeather = RandomWeather().getWeatherHiragana()
+        }
+        sensorFlag = true
+    }
 
     private fun settingDialogCreate() {
         //大元
@@ -261,6 +268,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         val textView2 = TextView(this)
         textView2.text = "ネットワークの使用"
         val toggleButton = ToggleButton(this)
+
         toggleButton.textOff = "使用しない"
         toggleButton.textOn = "使用する"
         toggleButton.isChecked = networkFlag
@@ -282,8 +290,10 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
                     languageFlag = 1
                 }
             }
-            editor.putInt("language",languageFlag)
-            editor.putBoolean("network",toggleButton.isChecked)
+            editor.putInt("language", languageFlag)
+            networkFlag = toggleButton.isChecked
+            editor.putBoolean("network", networkFlag)
+            editor.commit()
 
             Toast.makeText(this@MainActivity, "Yesが押されました", Toast.LENGTH_LONG).show()
 
