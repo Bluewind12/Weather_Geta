@@ -21,9 +21,18 @@
 
     <!-- 天気系 -->
     <string name="output_weather">場所：%s\n天気：%s</string>
+
     <!-- 広告系 -->
     <string name="adsID_banner">1000</string>
     <string name="adsID_popup">1000</string>
     <string name="adsKey">1000</string>
+
+    <!-- 設定のダイアログの表示 -->
+    <string name="setting_view">表示</string>
+    <string name="setting_view_1">ひらがな\t</string>
+    <string name="setting_view_2">漢字\t</string>
+    <string name="setting_net">ネットワークの使用</string>
+    <string name="setting_net_on">する</string>
+    <string name="setting_net_off">しない</string>
 
 </resources>

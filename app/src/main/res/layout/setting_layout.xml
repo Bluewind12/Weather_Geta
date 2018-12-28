@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <TextView
+            android:text="@string/setting_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:id="@+id/settingTextView1"
+            android:textSize="24sp"/>
+
+    <RadioGroup
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/settingTextView1" android:id="@+id/settingRadioGroup">
+        <RadioButton
+                android:text="@string/setting_view_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/radioButton"
+                android:layout_weight="1"/>
+        <RadioButton
+                android:text="@string/setting_view_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/radioButton2"
+                android:layout_weight="1"/>
+    </RadioGroup>
+    <TextView
+            android:text="@string/setting_net"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"
+            android:id="@+id/settingTextView2" android:layout_marginTop="16dp"
+            app:layout_constraintTop_toBottomOf="@+id/settingRadioGroup" android:textSize="24sp"/>
+    <ToggleButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="@+id/settingTextView2"
+            app:layout_constraintEnd_toEndOf="@+id/settingTextView2"
+            android:id="@+id/settingToggleButton" android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/settingTextView2" android:textOff="@string/setting_net_off"
+            android:textOn="@string/setting_net_on" android:textAllCaps="true"/>
+</android.support.constraint.ConstraintLayout>
