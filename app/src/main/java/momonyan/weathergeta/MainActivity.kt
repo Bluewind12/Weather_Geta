@@ -1,26 +1,27 @@
 package momonyan.weathergeta
 
-import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import android.hardware.SensorEvent
-import android.hardware.SensorManager
 import android.hardware.Sensor
-import android.os.Bundle
+import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
+import android.hardware.SensorManager
 import android.net.Uri
+import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.*
+import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
-import java.util.*
+import kotlinx.android.synthetic.main.setting_layout.view.*
 import okhttp3.*
+import org.json.JSONException
 import org.json.JSONObject
 import java.io.IOException
-import org.json.JSONException
+import java.util.*
 
 class MainActivity : AppCompatActivity(), SensorEventListener {
 
@@ -222,6 +223,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
                     } else {
                         error("変換エラー")
                     }
+                    Log.d("BBB:","aaa:"+languageFlag)
                     sensorFlag = true
                 } catch (e: JSONException) {
                     e.printStackTrace()
@@ -240,63 +242,39 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     }
 
     private fun settingDialogCreate() {
-        //大元
-        val layout = LinearLayout(this)
-        layout.orientation = LinearLayout.VERTICAL
-
-        //表示言語
-        val textView = TextView(this)
-        textView.text = "表示は？"
-        val radioGroup = RadioGroup(this)
-        radioGroup.orientation = RadioGroup.HORIZONTAL
-        //0:漢字
-        val radioButton1 = RadioButton(this)
-        radioButton1.text = "漢字"
-        radioGroup.addView(radioButton1)
-        //1:ひらがな
-        val radioButton2 = RadioButton(this)
-        radioButton2.text = "ひらがな"
-        radioGroup.addView(radioButton2)
-        when (languageFlag) {
-            0 -> radioButton1.isChecked = true
-            1 -> radioButton2.isChecked = true
-        }
-        layout.addView(textView)
-        layout.addView(radioGroup)
-
-        //ネット使用
-        val textView2 = TextView(this)
-        textView2.text = "ネットワークの使用"
-        val toggleButton = ToggleButton(this)
-
-        toggleButton.textOff = "使用しない"
-        toggleButton.textOn = "使用する"
-        toggleButton.isChecked = networkFlag
-        layout.addView(textView2)
-        layout.addView(toggleButton)
-
+        val layout = this.layoutInflater.inflate(R.layout.setting_layout, null)
         //ダイアログボックス
         val dlg = AlertDialog.Builder(this)
         dlg.setTitle("設定画面")
         dlg.setView(layout)
+
+        //表示
+        when (languageFlag) {
+            0 -> layout.radioButton.isChecked = true
+            1 -> layout.radioButton2.isChecked = true
+        }
+        //ネット使用
+        layout.settingToggleButton.isChecked = networkFlag
+
         dlg.setPositiveButton("決定") { dialog, which ->
             //Yesボタンが押された時の処理
             editor = sharedPreferences.edit()
             when {
-                radioButton1.isChecked -> {
+                layout.radioButton.isChecked -> {
                     languageFlag = 0
+                    Toast.makeText(this@MainActivity, "12", Toast.LENGTH_SHORT).show()
+
                 }
-                radioButton2.isChecked -> {
+                layout.radioButton2.isChecked -> {
                     languageFlag = 1
+                    Toast.makeText(this@MainActivity, "1234", Toast.LENGTH_SHORT).show()
+
                 }
             }
             editor.putInt("language", languageFlag)
-            networkFlag = toggleButton.isChecked
+            networkFlag = layout.settingToggleButton.isChecked
             editor.putBoolean("network", networkFlag)
-            editor.commit()
-
-            Toast.makeText(this@MainActivity, "Yesが押されました", Toast.LENGTH_LONG).show()
-
+            editor.apply()
         }
         dlg.setNegativeButton("キャンセル") { dialog, which ->
             //Noボタンが押された時の処理
