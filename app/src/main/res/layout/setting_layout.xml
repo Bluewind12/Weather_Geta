@@ -48,7 +48,14 @@
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="@+id/settingTextView2"
             app:layout_constraintEnd_toEndOf="@+id/settingTextView2"
+            android:background="@drawable/toggle_button_back"
             android:id="@+id/settingToggleButton" android:layout_marginTop="8dp"
             app:layout_constraintTop_toBottomOf="@+id/settingTextView2" android:textOff="@string/setting_net_off"
             android:textOn="@string/setting_net_on" android:textAllCaps="true"/>
+    <Space
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" android:layout_marginTop="24dp"
+            app:layout_constraintTop_toBottomOf="@+id/settingToggleButton"/>
 </android.support.constraint.ConstraintLayout>
