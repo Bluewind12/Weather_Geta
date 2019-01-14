@@ -30,6 +30,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     private var sensorY: Float = 0.0f
     private var sensorZ: Float = 0.0f
     private var sensorFlag = false
+    private var downFlag = false
 
     private val landStructure = LandSeting()
     private lateinit var outWeather: String
@@ -43,6 +44,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     private lateinit var editor: SharedPreferences.Editor
     private val REQUEST_CODE = 1
 
+    private var debugInt = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -92,17 +94,20 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         }
 
 
-        if (sensorY <= -4.5f && !sensorFlag) {
+        if (sensorY <= -4.5f && !downFlag) {
             textView2.text = "起こして！"
+            downFlag = true
+            debugInt++
             if (networkFlag) {
                 getWeather()
             } else {
                 notNetWeather()
             }
         }
-        if (sensorY >= 8.0f && sensorFlag) {
+        if (sensorY >= 8.0f && sensorFlag && downFlag) {
             textView2.text = getString(R.string.output_weather, landStructure.city, outWeather)
             sensorFlag = false
+            downFlag = false
         }
     }
 
@@ -171,33 +176,15 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
                     val listArray = rootObj.getJSONArray("list")
 
                     val obj = listArray.getJSONObject(0)
-
-                    // 地点ID
-                    val id = obj.getInt("id")
-
-                    // 地点名
-                    val cityName = obj.getString("name")
-
                     // 気温(Kから℃に変換)
                     val mainObj = obj.getJSONObject("main")
                     val currentTemp = (mainObj.getDouble("temp") - 273.15f).toFloat()
-
                     val minTemp = (mainObj.getDouble("temp_min") - 273.15f).toFloat()
-
                     val maxTemp = (mainObj.getDouble("temp_max") - 273.15f).toFloat()
-
-                    // 湿度
-                    if (mainObj.has("humidity")) {
-                        val humidity = mainObj.getInt("humidity")
-                    }
-
-                    // 取得時間
-                    val time = obj.getLong("dt")
 
                     // 天気
                     val weatherArray = obj.getJSONArray("weather")
                     val weatherObj = weatherArray.getJSONObject(0)
-                    val iconId = weatherObj.getString("icon")
                     val weather = weatherObj.getString("main")
 
                     if (languageFlag == 0) {
@@ -223,7 +210,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
                     } else {
                         error("変換エラー")
                     }
-                    Log.d("BBB:","aaa:"+languageFlag)
+                    Log.d("BBB","Test$debugInt")
                     sensorFlag = true
                 } catch (e: JSONException) {
                     e.printStackTrace()
