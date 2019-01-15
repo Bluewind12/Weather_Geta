@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:tools="http://schemas.android.com/tools" xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+            android:state_checked="false">
+        <shape tools:ignore="StateListReachable">
+            <solid android:color="#FFFFFF"/>
+            <padding
+                    android:bottom="5sp"
+                    android:left="5sp"
+                    android:right="5sp"
+                    android:top="5sp"/>
+            <corners android:radius="8sp"/>
+
+            <stroke
+                    android:color="#AAAAAA"
+                    android:width="6sp"/>
+        </shape>
+    </item>
+
+    <item
+            android:state_checked="true">
+        <shape tools:ignore="StateListReachable">
+            <solid android:color="#FFFFFF"/>
+            <padding
+                    android:bottom="5sp"
+                    android:left="5sp"
+                    android:right="5sp"
+                    android:top="5sp"/>
+            <corners android:radius="8sp"/>
+
+            <stroke
+                    android:color="@color/colorAccent"
+                    android:width="6sp"/>
+        </shape>
+    </item>
+</selector>

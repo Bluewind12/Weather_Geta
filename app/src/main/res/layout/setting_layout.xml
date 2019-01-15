@@ -50,5 +50,6 @@
             app:layout_constraintEnd_toEndOf="@+id/settingTextView2"
             android:id="@+id/settingToggleButton" android:layout_marginTop="8dp"
             app:layout_constraintTop_toBottomOf="@+id/settingTextView2" android:textOff="@string/setting_net_off"
-            android:textOn="@string/setting_net_on" android:textAllCaps="true"/>
+            android:textOn="@string/setting_net_on" android:textAllCaps="true"
+            android:background="@drawable/toggle_button_back"/>
 </android.support.constraint.ConstraintLayout>
