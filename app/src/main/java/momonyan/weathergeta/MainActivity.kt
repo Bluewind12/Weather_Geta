@@ -105,6 +105,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
             }
         }
         if (sensorY >= 8.0f && sensorFlag && downFlag) {
+
             textView2.text = getString(R.string.output_weather, landStructure.city, outWeather)
             sensorFlag = false
             downFlag = false
