@@ -29,8 +29,8 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     private var sensorX: Float = 0.0f
     private var sensorY: Float = 0.0f
     private var sensorZ: Float = 0.0f
-    private var sensorFlag = false
-    private var downFlag = false
+    var sensorFlag = false
+    var downFlag = false
 
     private val landStructure = LandSeting()
     private lateinit var outWeather: String
@@ -57,9 +57,6 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
 
         //パーミッションの許可
         //RuntimePermissionChecker.requestAllPermissions(this, REQUEST_CODE)
-
-        button.setOnClickListener {
-        }
     }
 
     override fun onResume() {
@@ -105,10 +102,12 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
             }
         }
         if (sensorY >= 8.0f && sensorFlag && downFlag) {
-
-            textView2.text = getString(R.string.output_weather, landStructure.city, outWeather)
             sensorFlag = false
-            downFlag = false
+            val countFunction = CountFunction(3000, 999)
+            countFunction.setData(landStructure.city, outWeather, textView2,this)
+            countFunction.start()
+            //textView2.text = getString(R.string.output_weather, landStructure.city, outWeather)
+
         }
     }
 
