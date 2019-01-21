@@ -16,5 +16,10 @@
             android:title="@string/privacy"
             android:icon="@drawable/icon_document_256"
             app:showAsAction="ifRoom"/>
+    <item
+            android:id="@+id/menu4"
+            android:title="@string/enquete"
+            android:icon="@drawable/icon_document_256"
+            app:showAsAction="ifRoom"/>
 
 </menu>

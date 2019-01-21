@@ -104,7 +104,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         if (sensorY >= 8.0f && sensorFlag && downFlag) {
             sensorFlag = false
             val countFunction = CountFunction(3000, 999)
-            countFunction.setData(landStructure.city, outWeather, textView2,this)
+            countFunction.setData(landStructure.city, outWeather, textView2, this)
             countFunction.start()
             //textView2.text = getString(R.string.output_weather, landStructure.city, outWeather)
 
@@ -128,6 +128,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         when (item.itemId) {
             R.id.menu1 -> {
                 //TODO 説明画面への移行
+                startActivity(Intent(this, ReadMeActivity::class.java))
                 Toast.makeText(this, "説明", Toast.LENGTH_LONG).show()
                 return true
             }
@@ -144,6 +145,19 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
                     .setMessage(getString(R.string.privacy_description))
                     .setPositiveButton("はい") { dialog, which ->
                         val privacyURL = Uri.parse(getString(R.string.privacy_url))
+                        val intent = Intent(Intent.ACTION_VIEW, privacyURL)
+                        startActivity(intent)
+                    }
+                    .setNegativeButton("キャンセル", null)
+                    .show()
+                return true
+            }
+            R.id.menu4 -> {
+                AlertDialog.Builder(this)
+                    .setTitle("Webページを開きます")
+                    .setMessage(getString(R.string.privacy_description))
+                    .setPositiveButton("はい") { dialog, which ->
+                        val privacyURL = Uri.parse(getString(R.string.enquete_url))
                         val intent = Intent(Intent.ACTION_VIEW, privacyURL)
                         startActivity(intent)
                     }
@@ -210,7 +224,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
                     } else {
                         error("変換エラー")
                     }
-                    Log.d("BBB","Test$debugInt")
+                    Log.d("BBB", "Test$debugInt")
                     sensorFlag = true
                 } catch (e: JSONException) {
                     e.printStackTrace()

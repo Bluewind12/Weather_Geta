@@ -15,9 +15,12 @@
     <string name="setting">設定</string>
     <string name="privacy">プライバシーポリシーなど</string>
     <string name="privacy_description">[プライバシーポリシー]\n[使用素材]\nについてのページを開きます。\nよろしいですか？</string>
+    <string name="enquete">アンケート箱</string>
+    <string name="enquete_description">[アンケート箱]\nについてのページを開きます。\nよろしいですか？</string>
 
     <!-- URL -->
     <string name="privacy_url">http://</string>
+    <string name="enquete_url">http://</string>
 
     <!-- 天気系 -->
     <string name="output_weather">場所：%s\n天気：%s</string>
